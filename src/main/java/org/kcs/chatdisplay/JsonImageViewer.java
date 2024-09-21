@@ -1,0 +1,146 @@
+package org.kcs.chatdisplay;
+
+import java.awt.BorderLayout;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.io.ByteArrayInputStream;
+import java.io.StringReader;
+import java.util.Base64;
+
+import javax.imageio.ImageIO;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
+import javax.json.JsonValue;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+/**
+ * ImageViewer class for displaying images from JSON-encoded MIME data. This
+ * viewer handles image navigation and display within a Swing-based UI.
+ */
+public class JsonImageViewer extends AbstractImageViewer{
+	private static final Logger LOG = LogManager.getLogger(JsonImageViewer.class);
+
+	/**
+	 * Constructor initializes the UI for image viewing.
+	 */
+	public JsonImageViewer() {
+		initializeUI();
+	}
+
+	private void initializeUI() {
+		frame = new JFrame("MIME Image Viewer");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setLayout(new BorderLayout());
+
+		imageLabel = new JLabel();
+		infoLabel = new JLabel("No images loaded");
+		JButton prevButton = new JButton("Previous");
+		JButton nextButton = new JButton("Next");
+
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.add(prevButton);
+		buttonPanel.add(nextButton);
+
+		frame.add(imageLabel, BorderLayout.CENTER);
+		frame.add(buttonPanel, BorderLayout.SOUTH);
+		frame.add(infoLabel, BorderLayout.NORTH);
+
+		prevButton.addActionListener(e -> showPreviousImage());
+		nextButton.addActionListener(e -> showNextImage());
+		frame.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentResized(ComponentEvent e) {
+				updateFrameSize();
+			}
+		});
+
+		frame.pack();
+		frame.setVisible(true);
+	}
+
+	/**
+	 * Loads images from a JSON file path provided.
+	 * 
+	 * @param filePath The path to the JSON file containing image data.
+	 */
+	@Override
+	public void loadImagesFromJson(String fileText) {
+		try {
+			JsonReader jsonReader = Json.createReader(new StringReader(fileText));
+			JsonObject mainObject = jsonReader.readObject().asJsonObject();
+			JsonObject dataObject = mainObject.getJsonObject("data");
+			JsonArray tableArray = dataObject.getJsonArray("data");
+			for (JsonValue table : tableArray) {
+				JsonObject tableObject = table.asJsonObject();
+				if (tableObject.getString("tableName").equals("characters")) {
+					JsonArray rows = tableObject.get("rows").asJsonArray();
+					for (JsonValue rowValue : rows) {
+						JsonObject rowObject = rowValue.asJsonObject();
+						/*
+						 * AI Character Images.
+						 */
+						JsonObject avatarObject = rowObject.getJsonObject("avatar");
+						String image = avatarObject.getString("url");
+						if (image.isBlank()) {
+							LOG.warn("Image is blank.  Moving on.");
+							continue;
+						}
+						processImage(image);
+
+						JsonObject userObject = rowObject.getJsonObject("userCharacter");
+						LOG.info("The User Object is {}", userObject.toString());
+						JsonObject userAvatarObject = userObject.getJsonObject("avatar");
+						if (userAvatarObject.isEmpty()) {
+							LOG.warn("The avatar object is empty.");
+							continue;
+						}
+						LOG.info("User Avatar object is {}", userAvatarObject.toString());
+						String userImage = userAvatarObject.getString("url");
+						LOG.info("User MIME is {}", userImage);
+						if (userImage.isBlank()) {
+							LOG.warn("User Image is blank.  Moving on.");
+							continue;
+						}
+						processImage(userImage);
+					}
+				}
+			}
+			if (!images.isEmpty()) {
+				currentImageIndex = 0;
+				updateDisplay();
+			}
+		} catch (Exception e) {
+			LOG.error("Failed to load images from file. {}", e);
+			JOptionPane.showMessageDialog(frame, "Failed to load images: " + e.getMessage(), "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	private void processImage(String image) {
+		if (image.isBlank()) {
+			LOG.error("Image is blank.");
+		}
+		String base64Data = image;
+		base64Data = base64Data.substring(23);
+		try {
+			byte[] imageBytes = Base64.getDecoder().decode(base64Data);
+			if (isUniqueImage(imageBytes)) {
+				images.add(ImageIO.read(new ByteArrayInputStream(imageBytes)));
+			}
+		} catch (Exception e) {
+			LOG.error("Failed to decode image: {}", e.getMessage());
+		}
+	}
+
+
+
+}

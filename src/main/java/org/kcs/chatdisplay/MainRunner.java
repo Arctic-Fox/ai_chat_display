@@ -20,13 +20,8 @@ public class MainRunner {
 		LOG.info(fileText);
 		      
         SwingUtilities.invokeLater(() -> {
-            ImageViewer viewer = new ImageViewer();
-            if (args.length > 0) {
-                viewer.loadImagesFromJsonLarge(args[0]);
-            } else {
-            	LOG.info("No filename specified. Using default.");
-                viewer.loadImagesFromJsonLarge(fileText);
-            }
+            AbstractImageViewer viewer = new GsonImageViewer();
+            viewer.loadImagesFromJson(fileText);
         });
 	} 
 	
