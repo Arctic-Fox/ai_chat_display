@@ -24,7 +24,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.kcs.chatdisplay.ui.MainUi;
-import org.kcs.chatdisplay.util.GzipExtractor;  
+import org.kcs.chatdisplay.util.GzipExtractor;
+import org.kcs.chatdisplay.util.PropertyRetriever;  
 
 public class MainRunner {
 	private static final Logger LOG = LogManager.getLogger();
@@ -43,8 +44,10 @@ public class MainRunner {
 	} 
 	
     private static File openFileChooser() {
+		PropertyRetriever props = new PropertyRetriever();
+		String startDirectory = props.getProperty("start.directory");
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setCurrentDirectory(new File("C:/"));
+        fileChooser.setCurrentDirectory(new File(startDirectory));
         FileNameExtensionFilter filter = new FileNameExtensionFilter("GZip files", "gz");
         fileChooser.setFileFilter(filter);
 
