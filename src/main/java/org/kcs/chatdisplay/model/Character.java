@@ -21,21 +21,29 @@ public class Character {
 	private String metaDescription;
 	private String metaImage;
 	private String modelName;
-	private String textEmbeddingModelNamel;
+	private String textEmbeddingModelName;
 	private float temperature;
 	private int maxTokensPerMessage;
-	private List<InitialMessage> initialMessages;
+	private InitialMessage[] initialMessages;
 	private String[] loreBookUrls;
 	private Avatar avatar;
 	private Scene scene;
 	private UserCharacter userCharacter;
 	private SystemCharacter systemCharacter;
 	private boolean streamingResponse;
+	private String folderPath;
+//	private CustomData[] customData;
+	private String uuid;
+	private long creationTime;
+	private long lastMessageTime;
+	private int id;
+	private Object[] shortcutButtons;
+	private Types $types;
 	
-	public List<InitialMessage> getInitialMessages() {
+	public InitialMessage[] getInitialMessages() {
 		return initialMessages;
 	}
-	public void setInitialMessages(List<InitialMessage> initialMessages) {
+	public void setInitialMessages(InitialMessage[] initialMessages) {
 		this.initialMessages = initialMessages;
 	}
 	public String[] getLoreBookUrls() {
@@ -80,28 +88,28 @@ public class Character {
 	public void setFolderPath(String folderPath) {
 		this.folderPath = folderPath;
 	}
-	public String[] getCustomData() {
-		return customData;
-	}
-	public void setCustomData(String[] customData) {
-		this.customData = customData;
-	}
+//	public CustomData[] getCustomData() {
+//		return customData;
+//	}
+//	public void setCustomData(CustomData[] customData) {
+//		this.customData = customData;
+//	}
 	public String getUuid() {
 		return uuid;
 	}
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
 	}
-	public Date getCreationTime() {
+	public long getCreationTime() {
 		return creationTime;
 	}
-	public void setCreationTime(Date creationTime) {
+	public void setCreationTime(long creationTime) {
 		this.creationTime = creationTime;
 	}
-	public Date getLastMessageTime() {
+	public long getLastMessageTime() {
 		return lastMessageTime;
 	}
-	public void setLastMessageTime(Date lastMessageTime) {
+	public void setLastMessageTime(long lastMessageTime) {
 		this.lastMessageTime = lastMessageTime;
 	}
 	public int getId() {
@@ -110,7 +118,7 @@ public class Character {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String[] getShortcutButtons() {
+	public Object[] getShortcutButtons() {
 		return shortcutButtons;
 	}
 	public void setShortcutButtons(String[] shortcutButtons) {
@@ -122,15 +130,6 @@ public class Character {
 	public void set$types(Types $types) {
 		this.$types = $types;
 	}
-	private String folderPath;
-	private String[] customData;
-	private String uuid;
-	private Date creationTime;
-	private Date lastMessageTime;
-	private int id;
-	private String[] shortcutButtons;
-	private Types $types;
-	
 	
 	public String getName() {
 		return name;
@@ -228,11 +227,11 @@ public class Character {
 	public void setModelName(String modelName) {
 		this.modelName = modelName;
 	}
-	public String getTextEmbeddingModelNamel() {
-		return textEmbeddingModelNamel;
+	public String getTextEmbeddingModelName() {
+		return textEmbeddingModelName;
 	}
-	public void setTextEmbeddingModelNamel(String textEmbeddingModelNamel) {
-		this.textEmbeddingModelNamel = textEmbeddingModelNamel;
+	public void setTextEmbeddingModelName(String textEmbeddingModelNamel) {
+		this.textEmbeddingModelName = textEmbeddingModelNamel;
 	}
 	public float getTemperature() {
 		return temperature;

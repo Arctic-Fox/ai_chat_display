@@ -20,6 +20,7 @@ public class MainRunner {
 		LOG.info(fileText);
 		      
         SwingUtilities.invokeLater(() -> {
+//            AbstractImageViewer viewer = new JsonImageViewer();
             AbstractImageViewer viewer = new GsonImageViewer();
             viewer.loadImagesFromJson(fileText);
         });

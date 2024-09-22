@@ -6,7 +6,7 @@ public class CharacterData {
 
 	private String tableName;
 	private boolean inbound;
-	private List<Character> rows;
+	private Character[] rows;
 	
 	public String getTableName() {
 		return tableName;
@@ -20,10 +20,10 @@ public class CharacterData {
 	public void setInbound(boolean inbound) {
 		this.inbound = inbound;
 	}
-	public List<Character> getRows() {
+	public Character[] getRows() {
 		return rows;
 	}
-	public void setRows(List<Character> rows) {
+	public void setRows(Character[] rows) {
 		this.rows = rows;
 	}
 

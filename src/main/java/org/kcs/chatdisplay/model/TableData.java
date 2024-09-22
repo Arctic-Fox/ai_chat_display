@@ -1,12 +1,10 @@
 package org.kcs.chatdisplay.model;
 
-import java.util.List;
-
 public class TableData {
 
 	private String tableName;
 	private boolean inbound;
-	private List<Character> characters;
+	private Character[] characters;
 	
 	public String getTableName() {
 		return tableName;
@@ -20,10 +18,10 @@ public class TableData {
 	public void setInbound(boolean inbound) {
 		this.inbound = inbound;
 	}
-	public List<Character> getCharacters() {
+	public Character[] getCharacters() {
 		return characters;
 	}
-	public void setCharacters(List<Character> characters) {
+	public void setCharacters(Character[] characters) {
 		this.characters = characters;
 	}
 	

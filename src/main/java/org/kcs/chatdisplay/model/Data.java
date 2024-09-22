@@ -6,13 +6,13 @@ public class Data {
 
 	private String databaseName;
 	private int databaseVersion;
-	private List<Table> tables;
-	private CharacterData data;
+	private Table[] tables;
+	private List<CharacterData> data;
 	
-	public CharacterData getData() {
+	public List<CharacterData> getData() {
 		return data;
 	}
-	public void setData(CharacterData data) {
+	public void setData(List<CharacterData> data) {
 		this.data = data;
 	}
 	public String getDatabaseName() {
@@ -27,10 +27,10 @@ public class Data {
 	public void setDatabaseVersion(int databaseVersion) {
 		this.databaseVersion = databaseVersion;
 	}
-	public List<Table> getTables() {
+	public Table[] getTables() {
 		return tables;
 	}
-	public void setTables(List<Table> tables) {
+	public void setTables(Table[] tables) {
 		this.tables = tables;
 	}
 }
