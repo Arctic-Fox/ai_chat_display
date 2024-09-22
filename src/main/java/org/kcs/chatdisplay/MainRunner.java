@@ -3,11 +3,11 @@ package org.kcs.chatdisplay;
 import java.io.File;
 
 import javax.swing.JFileChooser;
-import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.kcs.chatdisplay.ui.MainUi;
 import org.kcs.chatdisplay.util.GzipExtractor;  
 
 public class MainRunner {
@@ -17,13 +17,9 @@ public class MainRunner {
 		GzipExtractor extractor = new GzipExtractor();
 		String fileName = openFileChooser().getAbsolutePath();
 		String fileText = extractor.extractGzip(fileName);
-		LOG.info(fileText);
-		      
-        SwingUtilities.invokeLater(() -> {
-//            AbstractImageViewer viewer = new JsonImageViewer();
-            AbstractImageViewer viewer = new GsonImageViewer();
-            viewer.loadImagesFromJson(fileText);
-        });
+		LOG.info("File {} extracted", fileName);
+		
+		MainUi ui = new MainUi(fileText);
 	} 
 	
     private static File openFileChooser() {
