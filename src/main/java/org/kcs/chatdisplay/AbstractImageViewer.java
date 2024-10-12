@@ -18,50 +18,44 @@ package org.kcs.chatdisplay;
 */
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Base64;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import javax.imageio.ImageIO;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.kcs.chatdisplay.util.Utilities;
 
 public abstract class AbstractImageViewer {
 
 	private static final Logger LOG = LogManager.getLogger(AbstractImageViewer.class);
-
-	protected List<BufferedImage> images = new ArrayList<>();
-	protected Set<String> imageSet = new HashSet<>();
-
-	public abstract List<BufferedImage> loadImagesFromJson(String fileText);
-
-	protected boolean isUniqueImage(byte[] imageBytes) {
-		String imgString = Arrays.toString(imageBytes);
-		if (!imageSet.contains(imgString)) {
-			LOG.info("Image is unique.");
-			imageSet.add(imgString);
-			return true;
-		}
-		return false;
-	}
+	public abstract void loadImagesFromJson(String fileText);
 
 	protected void processImage(String mimeImage) {
 		if (mimeImage.isBlank()) {
-			LOG.error("Image is blank.");
+			LOG.error("Image bytes are blank.");
 			return;
 		}
 		mimeImage = mimeImage.substring(23); //Remove leading metadata
 		try {
-			byte[] imageBytes = Base64.getDecoder().decode(mimeImage);
-			if (isUniqueImage(imageBytes)) {
-				images.add(ImageIO.read(new ByteArrayInputStream(imageBytes)));
+			byte[] imageBytes = Base64.getMimeDecoder().decode(mimeImage);
+			LOG.info("ImageBytes size is {}.", imageBytes.length);
+			BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(imageBytes));
+			if(bufferedImage == null) {
+				LOG.error("BufferedImage is null.");
+				return;
 			}
+			
+			if(Utilities.getInstance().addImage(bufferedImage)) {
+				LOG.info("Image added!");
+			} else {
+				LOG.info("Image not added.  Likely a duplicate.");
+			}
+			
 		} catch (Exception e) {
 			LOG.error("Failed to decode image: {}", e.getMessage());
+
 		}
 	}
 }
+

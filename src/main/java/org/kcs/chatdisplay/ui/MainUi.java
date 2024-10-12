@@ -22,6 +22,7 @@ import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -32,8 +33,7 @@ import javax.swing.JPanel;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.kcs.chatdisplay.AbstractImageViewer;
-import org.kcs.chatdisplay.GsonImageViewer;
+import org.kcs.chatdisplay.util.Utilities;
 
 public class MainUi {
 	
@@ -51,14 +51,10 @@ public class MainUi {
 	/**
 	 * Constructor initializes the UI for image viewing.
 	 */
-	public MainUi(String fileText) {
+	public MainUi() {
 		initializeUI();
-//      AbstractImageViewer viewer = new JsonImageViewer();
-        AbstractImageViewer viewer = new GsonImageViewer();
-        images = viewer.loadImagesFromJson(fileText);
-		if (images != null && !images.isEmpty()) {
-			currentImageIndex = 0;
-		}
+		images = new ArrayList<>(Utilities.getInstance().getImages());
+		currentImageIndex = 0;
 		LOG.info("Images loaded.  Current image index is {}", currentImageIndex);
 		updateDisplay();
 	}
@@ -114,6 +110,7 @@ public class MainUi {
 		if (currentImageIndex >= 0) {
 			if (images.get(currentImageIndex) == null) {
 				LOG.warn("Current image is null.");
+				showNextImage();
 				return;
 			}
 			imageLabel.setIcon(new ImageIcon(images.get(currentImageIndex)));
